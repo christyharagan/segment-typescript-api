@@ -44,7 +44,7 @@ Each API is divided into two files:
 An example:
 
 ```ts
-import * as config from 'segment-typescript-api/config_api'
+import * as config from 'segment-typescript-api/cjs/config_api'
 
 let WORKSPACE_TOKEN = '123'
 let WORKSPACE_SLUG = 'my-workspace'
@@ -52,6 +52,12 @@ let WORKSPACE_SLUG = 'my-workspace'
 config.getWorkspace(WORKSPACE_TOKEN, WORKSPACE_SLUG).then(workspace=>{
   console.log(workspace)
 })
+```
+
+If you're using ESNext modules, import from the ```esm``` namespace:
+
+```ts
+import * as config from 'segment-typescript-api/esm/config_api'
 ```
 
 TODO
