@@ -1,0 +1,22 @@
+{
+  "name": "segment-typescript-api",
+  "version": "0.1.0",
+  "description": "TypeScript API for consuming segment.com profile, config, and event APIs",
+  "repository": "christyharagan/segment-typescript-api",
+  "author": {
+    "name": "Christy Haragan",
+    "email": "christy.haragan.github@gmail.com",
+    "url": "https://github.com/christyharagan"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/base-64": "^0.1.3",
+    "@types/json-schema": "^7.0.4",
+    "segment-typescript-definitions": "^0.2.0"
+  },
+  "dependencies": {
+    "base-64": "^0.1.0",
+    "cross-fetch": "^3.0.4",
+    "json-schema": "^0.2.5"
+  }
+}
