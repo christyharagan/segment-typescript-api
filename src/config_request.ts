@@ -91,9 +91,9 @@ export type ConnectionMode = 'UNSPECIFIED' | 'CLOUD' | 'DEVICE'
 
 export type Page = { page_size?: number, page_token?: string };
 
-export type Type = 'string'
+export type ConfigValue = { name: string } & ({ type: 'string', value: string } | { type: 'boolean', value: boolean } | { type: 'map', value: { [k: string]: string } } | { type: 'number', value: number } | { type: 'list', value: string[] })
 
-export type DestinationConfig = { destination: { name: string, config: { name: string, type: Type, value?: string }[], enabled: boolean, connection_mode: ConnectionMode } }
+export type DestinationConfig = { destination: { name: string, config: ConfigValue[], enabled: boolean, connection_mode: ConnectionMode } }
 
 export type TrackingPlanCreation = {
   display_name: string

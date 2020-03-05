@@ -85,15 +85,11 @@ export declare type Page = {
     page_size?: number;
     page_token?: string;
 };
-export declare type Type = 'string';
+export declare type ConfigValue = { name: string } & ({ type: 'string', value: string } | { type: 'boolean', value: boolean } | { type: 'map', value: { [k: string]: string } } | { type: 'number', value: number } | { type: 'list', value: string[] })
 export declare type DestinationConfig = {
     destination: {
         name: string;
-        config: {
-            name: string;
-            type: Type;
-            value?: string;
-        }[];
+        config: ConfigValue[];
         enabled: boolean;
         connection_mode: ConnectionMode;
     };
