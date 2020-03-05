@@ -113,4 +113,20 @@ function deleteFilter(token, work_id, src_id, dest_id, filter_id) {
     return r.request(token, ['workspaces', 'get', 'suc', work_id, {}, {}, ['sources', 'suc', src_id, ['destinations', 'suc', dest_id, ['filters', 'suc', filter_id, null]]]]);
 }
 exports.deleteFilter = deleteFilter;
+function batchTrackingPlanSourceConnection(token, work_id, track_id, src_ids) {
+    return r.request(token, ['workspaces', 'post', 'suc', work_id, { source_names: src_ids }, {}, ['tracking-plans', 'suc', track_id, ['source-connections:batchCreateConnections', 'none', null, null]]]);
+}
+exports.batchTrackingPlanSourceConnection = batchTrackingPlanSourceConnection;
+function createTrackingPlanSourceConnection(token, work_id, track_id, src_id) {
+    return r.request(token, ['workspaces', 'post', 'suc', work_id, { source_name: src_id }, {}, ['tracking-plans', 'suc', track_id, ['source-connections', 'none', null, null]]]);
+}
+exports.createTrackingPlanSourceConnection = createTrackingPlanSourceConnection;
+function listTrackingPlanSourceConnections(token, work_id, track_id) {
+    return r.request(token, ['workspaces', 'get', 'suc', work_id, {}, {}, ['tracking-plans', 'suc', track_id, ['source-connections', 'none', null, null]]]);
+}
+exports.listTrackingPlanSourceConnections = listTrackingPlanSourceConnections;
+function deleteTrackingPlanSourceConnection(token, work_id, track_id, src_id) {
+    return r.request(token, ['workspaces', 'del', 'suc', work_id, { source_name: src_id }, {}, ['tracking-plans', 'suc', track_id, ['source-connections', 'suc', src_id, null]]]);
+}
+exports.deleteTrackingPlanSourceConnection = deleteTrackingPlanSourceConnection;
 //# sourceMappingURL=config_api.js.map

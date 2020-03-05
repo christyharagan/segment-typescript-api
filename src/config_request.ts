@@ -31,9 +31,13 @@ export type Schema<I extends Input> = I extends ListCatalogSources ? { sources: 
   I extends UpdateTrackingPlan ? TrackingPlan :
   I extends ListFilters ? { filters: Filter[] } :
   I extends GetFilter ? Filter :
-  I extends CreateFilter ? Filter & {name: string} :
+  I extends CreateFilter ? Filter & { name: string } :
   I extends UpdateFilter ? { filter: Filter } :
   I extends DeleteFilter ? {} :
+  I extends BatchTrackingPlanSourceConnection ? { connections: TrackingPlanSourceConnectionResult[] } :
+  I extends CreateTrackingPlanSourceConnection ? { connection: TrackingPlanSourceConnectionResult } :
+  I extends ListTrackingPlanSourceConnections ? { connections: TrackingPlanSourceConnectionResult[] } :
+  I extends DeleteTrackingPlanSourceConnection ? {} :
   never
 
 export type SourceCatalogModel = {
@@ -147,7 +151,11 @@ export type Input = ListCatalogSources |
   GetFilter |
   CreateFilter |
   UpdateFilter |
-  DeleteFilter
+  DeleteFilter |
+  BatchTrackingPlanSourceConnection |
+  CreateTrackingPlanSourceConnection |
+  ListTrackingPlanSourceConnections |
+  DeleteTrackingPlanSourceConnection
 
 export type NestedInput = null | [string, IDLoc, string | null, NestedInput]
 
@@ -180,11 +188,21 @@ export type GetTrackingPlan = ['workspaces', Get, Suc, string, {}, {}, ['trackin
 export type ListTrackingPlans = ['workspaces', Get, Suc, string, {}, {}, ['tracking-plans', None, null, null]]
 export type UpdateTrackingPlan = ['workspaces', Put, Suc, string, TrackingPlan, {}, ['tracking-plans', Suc, string, null]]
 
+export type ListTrackingPlanSourceConnections = ['workspaces', Get, Suc, string, {}, {}, ['tracking-plans', Suc, string, ['source-connections', None, null, null]]]
+export type BatchTrackingPlanSourceConnection = ['workspaces', Post, Suc, string, { 'source_names': string[] }, {}, ['tracking-plans', Suc, string, ['source-connections:batchCreateConnections', None, null, null]]]
+export type CreateTrackingPlanSourceConnection = ['workspaces', Post, Suc, string, { 'source_name': string }, {}, ['tracking-plans', Suc, string, ['source-connections', None, null, null]]]
+export type DeleteTrackingPlanSourceConnection = ['workspaces', Delete, Suc, string, {}, {}, ['tracking-plans', Suc, string, ['source-connections', Suc, string, null]]]
+
 export type ListFilters = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', None, null, null]]]]
 export type GetFilter = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]]
 export type CreateFilter = ['workspaces', Post, Suc, string, { filter: Filter }, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', None, null, null]]]]
 export type UpdateFilter = ['workspaces', Patch, Suc, string, { filter: Filter }, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]]
 export type DeleteFilter = ['workspaces', Post, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]]
+
+export type TrackingPlanSourceConnectionResult = {
+  source_name: string
+  tracking_plan_id: string
+}
 
 export type Filter = {
   title: string

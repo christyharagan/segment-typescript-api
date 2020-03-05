@@ -1,4 +1,4 @@
-// ONLY NEEDED WHEN TARGETING ESNEXT MODULE OUTPUT (for some reason)
+// // ONLY NEEDED WHEN TARGETING ESNEXT MODULE OUTPUT (for some reason)
 // /// <reference lib="dom" />
 
 // declare const _fetch: typeof fetch;
@@ -15,6 +15,6 @@
 // }
 
 
-// ONLY NEEDED FOR DEV PURPOSES
+// // ONLY NEEDED FOR DEV PURPOSES
 // declare type SegmentEvents = string
 // declare type SegmentTrackProtocol<E extends SegmentEvents> = never

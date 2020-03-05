@@ -86,3 +86,16 @@ export function updateFilter(token: string, work_id: string, src_id: string, des
 export function deleteFilter(token: string, work_id: string, src_id: string, dest_id: string, filter_id: string): r.R<r.DeleteFilter> {
   return r.request(token, ['workspaces', 'get', 'suc', work_id, {}, {}, ['sources', 'suc', src_id, ['destinations', 'suc', dest_id, ['filters', 'suc', filter_id, null]]]])
 }
+
+export function batchTrackingPlanSourceConnection(token: string, work_id: string, track_id: string, src_ids: string[]): r.R<r.BatchTrackingPlanSourceConnection> {
+  return r.request(token, ['workspaces', 'post', 'suc', work_id, { source_names: src_ids }, {}, ['tracking-plans', 'suc', track_id, ['source-connections:batchCreateConnections', 'none', null, null]]])
+}
+export function createTrackingPlanSourceConnection(token: string, work_id: string, track_id: string, src_id: string): r.R<r.CreateTrackingPlanSourceConnection> {
+  return r.request(token, ['workspaces', 'post', 'suc', work_id, { source_name: src_id }, {}, ['tracking-plans', 'suc', track_id, ['source-connections', 'none', null, null]]])
+}
+export function listTrackingPlanSourceConnections(token: string, work_id: string, track_id: string): r.R<r.ListTrackingPlanSourceConnections> {
+  return r.request(token, ['workspaces', 'get', 'suc', work_id, {}, {}, ['tracking-plans', 'suc', track_id, ['source-connections', 'none', null, null]]])
+}
+export function deleteTrackingPlanSourceConnection(token: string, work_id: string, track_id: string, src_id: string): r.R<r.DeleteTrackingPlanSourceConnection> {
+  return r.request(token, ['workspaces', 'del', 'suc', work_id, { source_name: src_id }, {}, ['tracking-plans', 'suc', track_id, ['source-connections', 'suc', src_id, null]]])
+}
