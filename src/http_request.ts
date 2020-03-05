@@ -38,4 +38,3 @@ export async function request<I extends Input>(token: string, input: I, external
   })
   await response.text()
 }
-

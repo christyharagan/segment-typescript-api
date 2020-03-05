@@ -29,6 +29,11 @@ export type Schema<I extends Input> = I extends ListCatalogSources ? { sources: 
   I extends GetTrackingPlan ? TrackingPlan :
   I extends ListTrackingPlans ? { tracking_plans: TrackingPlan[] } :
   I extends UpdateTrackingPlan ? TrackingPlan :
+  I extends ListFilters ? { filters: Filter[] } :
+  I extends GetFilter ? Filter :
+  I extends CreateFilter ? Filter & {name: string} :
+  I extends UpdateFilter ? { filter: Filter } :
+  I extends DeleteFilter ? {} :
   never
 
 export type SourceCatalogModel = {
@@ -65,7 +70,7 @@ export type Source = {
   write_keys: string[],
   library_config: { [key: string]: JSON }
   create_time: Date
-  labels: {[key: string]: string}
+  labels: { [key: string]: string }
   id: string
 }
 
@@ -137,7 +142,12 @@ export type Input = ListCatalogSources |
   CreateTrackingPlan |
   GetTrackingPlan |
   UpdateTrackingPlan |
-  ListTrackingPlans
+  ListTrackingPlans |
+  ListFilters |
+  GetFilter |
+  CreateFilter |
+  UpdateFilter |
+  DeleteFilter
 
 export type NestedInput = null | [string, IDLoc, string | null, NestedInput]
 
@@ -146,24 +156,54 @@ export type Suffix = 'sources' | 'destinations' | 'tracking-plans' | 'schema-con
 
 export type ListCatalogSources = ['catalog/sources', Get, None, null, Page, {}, null]
 export type GetCatalogSource = ['catalog/sources', Get, Suc, string, {}, {}, null]
+
 export type ListCatalogDestinations = ['catalog/destinations', Get, None, null, Page, {}, null]
 export type GetCatalogDestination = ['catalog/destinations', Get, Suc, string, {}, {}, null]
+
 export type GetWorkspace = ['workspaces', Get, Suc, string, {}, {}, null]
+
 export type CreateSource = ['workspaces', Post, Suc, string, { source: CreateSourceConfig }, {}, ['sources', None, null, null]]
 export type GetSource = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, null]]
 export type ListSources = ['workspaces', Get, Suc, string, Page, {}, ['sources', None, null, null]]
 export type GetSchemaConfiguration = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['schema-config', None, null, null]]]
 export type UpdateSchemaConfiguration = ['workspaces', Patch, Suc, string, UpdateSchemaConfig, {}, ['sources', Suc, string, ['schema-config', None, null, null]]]
 export type DeleteSource = ['workspaces', Delete, Suc, string, {}, {}, ['sources', Suc, string, null]]
+
 export type CreateDestination = ['workspaces', Post, Suc, string, DestinationConfig, {}, ['sources', Suc, string, ['destinations', None, null, null]]]
 export type GetDestination = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, null]]]
 export type ListDestinations = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', None, null, null]]]
 export type UpdateDestination = ['workspaces', Patch, Suc, string, DestinationConfig, {}, ['sources', Suc, string, ['destinations', Suc, string, null]]]
 export type DeleteDestination = ['workspaces', Delete, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, null]]]
-export type CreateTrackingPlan = ['workspaces', Post, Suc, string, {tracking_plan:TrackingPlanCreation}, {}, ['tracking-plans', None, null, null]]
+
+export type CreateTrackingPlan = ['workspaces', Post, Suc, string, { tracking_plan: TrackingPlanCreation }, {}, ['tracking-plans', None, null, null]]
 export type GetTrackingPlan = ['workspaces', Get, Suc, string, {}, {}, ['tracking-plans', Suc, string, null]]
 export type ListTrackingPlans = ['workspaces', Get, Suc, string, {}, {}, ['tracking-plans', None, null, null]]
 export type UpdateTrackingPlan = ['workspaces', Put, Suc, string, TrackingPlan, {}, ['tracking-plans', Suc, string, null]]
+
+export type ListFilters = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', None, null, null]]]]
+export type GetFilter = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]]
+export type CreateFilter = ['workspaces', Post, Suc, string, { filter: Filter }, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', None, null, null]]]]
+export type UpdateFilter = ['workspaces', Patch, Suc, string, { filter: Filter }, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]]
+export type DeleteFilter = ['workspaces', Post, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]]
+
+export type Filter = {
+  title: string
+  if: string
+  actions: ({
+    type: 'drop_event'
+  } | {
+    type: 'sample_event'
+    percent: number
+    path?: string
+  } | {
+    type: 'whitelist_fields'
+    fields: { [k: string]: { field: string[] } }
+  } | {
+    type: 'blacklist_fields'
+    fields: { [k: string]: { field: string[] } }
+  })[]
+  enabled: boolean
+}
 // ['workspaces', 'regulations']
 // ['workspaces', 'invites']
 // ['workspaces', 'suppressed-users']

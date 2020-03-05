@@ -19,3 +19,8 @@ export declare function createTrackingPlan(token: string, work_id: string, confi
 export declare function getTrackingPlan(token: string, work_id: string, track_id: string): r.R<r.GetTrackingPlan>;
 export declare function updateTrackingPlan(token: string, work_id: string, track_id: string, config: r.TrackingPlan): r.R<r.UpdateTrackingPlan>;
 export declare function listTrackingPlans(token: string, work_id: string): r.R<r.ListTrackingPlans>;
+export declare function listFilters(token: string, work_id: string, src_id: string, dest_id: string): r.R<r.ListFilters>;
+export declare function getFilter(token: string, work_id: string, src_id: string, dest_id: string, filter_id: string): r.R<r.GetFilter>;
+export declare function createFilter(token: string, work_id: string, src_id: string, dest_id: string, config: r.Filter): r.R<r.CreateFilter>;
+export declare function updateFilter(token: string, work_id: string, src_id: string, dest_id: string, filter_id: string, config: r.Filter): r.R<r.UpdateFilter>;
+export declare function deleteFilter(token: string, work_id: string, src_id: string, dest_id: string, filter_id: string): r.R<r.DeleteFilter>;

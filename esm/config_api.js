@@ -64,4 +64,19 @@ export function updateTrackingPlan(token, work_id, track_id, config) {
 export function listTrackingPlans(token, work_id) {
     return r.request(token, ['workspaces', 'get', 'suc', work_id, {}, {}, ['tracking-plans', 'none', null, null]]);
 }
+export function listFilters(token, work_id, src_id, dest_id) {
+    return r.request(token, ['workspaces', 'get', 'suc', work_id, {}, {}, ['sources', 'suc', src_id, ['destinations', 'suc', dest_id, ['filters', 'none', null, null]]]]);
+}
+export function getFilter(token, work_id, src_id, dest_id, filter_id) {
+    return r.request(token, ['workspaces', 'get', 'suc', work_id, {}, {}, ['sources', 'suc', src_id, ['destinations', 'suc', dest_id, ['filters', 'suc', filter_id, null]]]]);
+}
+export function createFilter(token, work_id, src_id, dest_id, config) {
+    return r.request(token, ['workspaces', 'post', 'suc', work_id, { filter: config }, {}, ['sources', 'suc', src_id, ['destinations', 'suc', dest_id, ['filters', 'none', null, null]]]]);
+}
+export function updateFilter(token, work_id, src_id, dest_id, filter_id, config) {
+    return r.request(token, ['workspaces', 'patch', 'suc', work_id, { filter: config }, {}, ['sources', 'suc', src_id, ['destinations', 'suc', dest_id, ['filters', 'suc', filter_id, null]]]]);
+}
+export function deleteFilter(token, work_id, src_id, dest_id, filter_id) {
+    return r.request(token, ['workspaces', 'get', 'suc', work_id, {}, {}, ['sources', 'suc', src_id, ['destinations', 'suc', dest_id, ['filters', 'suc', filter_id, null]]]]);
+}
 //# sourceMappingURL=config_api.js.map

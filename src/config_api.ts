@@ -55,7 +55,7 @@ export function deleteDestination(token: string, work_id: string, src_id: string
   return r.request(token, ['workspaces', 'del', 'suc', work_id, {}, {}, ['sources', 'suc', src_id, ['destinations', 'suc', dest_id, null]]])
 }
 export function createTrackingPlan(token: string, work_id: string, config: r.TrackingPlanCreation): r.R<r.CreateTrackingPlan> {
-  return r.request(token, ['workspaces', 'post', 'suc', work_id, {tracking_plan: config}, {}, ['tracking-plans', 'none', null, null]])
+  return r.request(token, ['workspaces', 'post', 'suc', work_id, { tracking_plan: config }, {}, ['tracking-plans', 'none', null, null]])
 }
 export function getTrackingPlan(token: string, work_id: string, track_id: string): r.R<r.GetTrackingPlan> {
   return r.request(token, ['workspaces', 'get', 'suc', work_id, {}, {}, ['tracking-plans', 'suc', track_id, null]])
@@ -65,4 +65,24 @@ export function updateTrackingPlan(token: string, work_id: string, track_id: str
 }
 export function listTrackingPlans(token: string, work_id: string): r.R<r.ListTrackingPlans> {
   return r.request(token, ['workspaces', 'get', 'suc', work_id, {}, {}, ['tracking-plans', 'none', null, null]])
+}
+
+export function listFilters(token: string, work_id: string, src_id: string, dest_id: string): r.R<r.ListFilters> {
+  return r.request(token, ['workspaces', 'get', 'suc', work_id, {}, {}, ['sources', 'suc', src_id, ['destinations', 'suc', dest_id, ['filters', 'none', null, null]]]])
+}
+
+export function getFilter(token: string, work_id: string, src_id: string, dest_id: string, filter_id: string): r.R<r.GetFilter> {
+  return r.request(token, ['workspaces', 'get', 'suc', work_id, {}, {}, ['sources', 'suc', src_id, ['destinations', 'suc', dest_id, ['filters', 'suc', filter_id, null]]]])
+}
+
+export function createFilter(token: string, work_id: string, src_id: string, dest_id: string, config: r.Filter): r.R<r.CreateFilter> {
+  return r.request(token, ['workspaces', 'post', 'suc', work_id, { filter: config }, {}, ['sources', 'suc', src_id, ['destinations', 'suc', dest_id, ['filters', 'none', null, null]]]])
+}
+
+export function updateFilter(token: string, work_id: string, src_id: string, dest_id: string, filter_id: string, config: r.Filter): r.R<r.UpdateFilter> {
+  return r.request(token, ['workspaces', 'patch', 'suc', work_id, { filter: config }, {}, ['sources', 'suc', src_id, ['destinations', 'suc', dest_id, ['filters', 'suc', filter_id, null]]]])
+}
+
+export function deleteFilter(token: string, work_id: string, src_id: string, dest_id: string, filter_id: string): r.R<r.DeleteFilter> {
+  return r.request(token, ['workspaces', 'get', 'suc', work_id, {}, {}, ['sources', 'suc', src_id, ['destinations', 'suc', dest_id, ['filters', 'suc', filter_id, null]]]])
 }
