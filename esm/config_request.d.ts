@@ -2,37 +2,50 @@ import { JSONSchema7 } from 'json-schema';
 export declare type R<I extends Input> = Promise<Schema<I>>;
 export declare type Method = Post | Get | Delete | Patch | Put;
 export declare type Get = 'get';
-export declare type Delete = 'del';
+export declare type Delete = 'delete';
 export declare type Patch = 'patch';
 export declare type Post = 'post';
 export declare type Put = 'put';
 export declare type Schema<I extends Input> = I extends ListCatalogSources ? {
     sources: SourceCatalogModel[];
+    next_page_token?: string;
 } : I extends GetCatalogSource ? SourceCatalogModel : I extends ListCatalogDestinations ? {
     destinations: DestinationCatalogModel[];
+    next_page_token?: string;
 } : I extends GetCatalogDestination ? DestinationConfig : I extends GetWorkspace ? Workspace : I extends CreateSource ? Source : I extends GetSource ? Source : I extends ListSources ? {
     sources: Source[];
+    next_page_token?: string;
 } : I extends GetSchemaConfiguration ? {
     [key: string]: JSON;
 } : I extends UpdateSchemaConfiguration ? {
     [key: string]: JSON;
 } : I extends DeleteSource ? {} : I extends CreateDestination ? DestinationConfig : I extends GetDestination ? DestinationConfig : I extends ListDestinations ? {
-    destinations: DestinationConfig[];
+    destinations: DestinationConfig['destination'][];
+    next_page_token?: string;
 } : I extends UpdateDestination ? DestinationConfig : I extends CreateTrackingPlan ? TrackingPlan : I extends GetTrackingPlan ? TrackingPlan : I extends ListTrackingPlans ? {
     tracking_plans: TrackingPlan[];
+    next_page_token?: string;
 } : I extends UpdateTrackingPlan ? TrackingPlan : I extends ListFilters ? {
-    filters: Filter[];
-} : I extends GetFilter ? Filter : I extends CreateFilter ? Filter & {
+    filters: (Filter & {
+        name: string;
+    })[];
+    next_page_token?: string;
+} : I extends GetFilter ? (Filter & {
+    name: string;
+}) : I extends CreateFilter ? Filter & {
     name: string;
 } : I extends UpdateFilter ? {
-    filter: Filter;
+    filter: Filter & {
+        name: string;
+    };
 } : I extends DeleteFilter ? {} : I extends BatchTrackingPlanSourceConnection ? {
     connections: TrackingPlanSourceConnectionResult[];
 } : I extends CreateTrackingPlanSourceConnection ? {
     connection: TrackingPlanSourceConnectionResult;
 } : I extends ListTrackingPlanSourceConnections ? {
     connections: TrackingPlanSourceConnectionResult[];
-} : I extends DeleteTrackingPlanSourceConnection ? {} : never;
+    next_page_token?: string;
+} : I extends DeleteTrackingPlanSourceConnection ? {} : I extends DeleteTrackingPlan ? {} : never;
 export declare type SourceCatalogModel = {
     categories: string[];
     description: string;
@@ -85,7 +98,29 @@ export declare type Page = {
     page_size?: number;
     page_token?: string;
 };
-export declare type ConfigValue = { name: string } & ({ type: 'string', value: string } | { type: 'boolean', value: boolean } | { type: 'map', value: { [k: string]: string } } | { type: 'number', value: number } | { type: 'list', value: string[] })
+export declare type ConfigValue = {
+    name: string;
+} & ({
+    type: 'string' | 'password' | 'color';
+    value: string;
+} | {
+    type: 'boolean';
+    value: boolean;
+} | {
+    type: 'map';
+    value: {
+        [k: string]: string;
+    };
+} | {
+    type: 'number';
+    value: number;
+} | {
+    type: 'list';
+    value: string[];
+} | {
+    type: 'mixed';
+    value: any;
+});
 export declare type DestinationConfig = {
     destination: {
         name: string;
@@ -122,35 +157,36 @@ export declare type UpdateSchemaConfig = {
     schema_config: {};
     update_mask: {};
 };
-export declare type Input = ListCatalogSources | GetCatalogSource | ListCatalogDestinations | GetCatalogDestination | GetWorkspace | CreateSource | GetSource | ListSources | GetSchemaConfiguration | UpdateSchemaConfiguration | DeleteSource | CreateDestination | GetDestination | ListDestinations | UpdateDestination | DeleteDestination | CreateTrackingPlan | GetTrackingPlan | UpdateTrackingPlan | ListTrackingPlans | ListFilters | GetFilter | CreateFilter | UpdateFilter | DeleteFilter | BatchTrackingPlanSourceConnection | CreateTrackingPlanSourceConnection | ListTrackingPlanSourceConnections | DeleteTrackingPlanSourceConnection;
+export declare type Input = ListCatalogSources | GetCatalogSource | ListCatalogDestinations | GetCatalogDestination | GetWorkspace | CreateSource | GetSource | ListSources | GetSchemaConfiguration | UpdateSchemaConfiguration | DeleteSource | CreateDestination | GetDestination | ListDestinations | UpdateDestination | DeleteDestination | CreateTrackingPlan | GetTrackingPlan | UpdateTrackingPlan | DeleteTrackingPlan | ListTrackingPlans | ListFilters | GetFilter | CreateFilter | UpdateFilter | DeleteFilter | BatchTrackingPlanSourceConnection | CreateTrackingPlanSourceConnection | ListTrackingPlanSourceConnections | DeleteTrackingPlanSourceConnection;
 export declare type NestedInput = null | [string, IDLoc, string | null, NestedInput];
 export declare type Prefix = 'catalog' | 'workspaces';
 export declare type Suffix = 'sources' | 'destinations' | 'tracking-plans' | 'schema-config';
-export declare type ListCatalogSources = ['catalog/sources', Get, None, null, Page, {}, null];
+export declare type ListCatalogSources = ['catalog/sources', Get, None, null, {}, Page, null];
 export declare type GetCatalogSource = ['catalog/sources', Get, Suc, string, {}, {}, null];
-export declare type ListCatalogDestinations = ['catalog/destinations', Get, None, null, Page, {}, null];
+export declare type ListCatalogDestinations = ['catalog/destinations', Get, None, null, {}, Page, null];
 export declare type GetCatalogDestination = ['catalog/destinations', Get, Suc, string, {}, {}, null];
 export declare type GetWorkspace = ['workspaces', Get, Suc, string, {}, {}, null];
 export declare type CreateSource = ['workspaces', Post, Suc, string, {
     source: CreateSourceConfig;
 }, {}, ['sources', None, null, null]];
 export declare type GetSource = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, null]];
-export declare type ListSources = ['workspaces', Get, Suc, string, Page, {}, ['sources', None, null, null]];
+export declare type ListSources = ['workspaces', Get, Suc, string, {}, Page, ['sources', None, null, null]];
 export declare type GetSchemaConfiguration = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['schema-config', None, null, null]]];
 export declare type UpdateSchemaConfiguration = ['workspaces', Patch, Suc, string, UpdateSchemaConfig, {}, ['sources', Suc, string, ['schema-config', None, null, null]]];
 export declare type DeleteSource = ['workspaces', Delete, Suc, string, {}, {}, ['sources', Suc, string, null]];
 export declare type CreateDestination = ['workspaces', Post, Suc, string, DestinationConfig, {}, ['sources', Suc, string, ['destinations', None, null, null]]];
 export declare type GetDestination = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, null]]];
-export declare type ListDestinations = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', None, null, null]]];
+export declare type ListDestinations = ['workspaces', Get, Suc, string, {}, Page, ['sources', Suc, string, ['destinations', None, null, null]]];
 export declare type UpdateDestination = ['workspaces', Patch, Suc, string, DestinationConfig, {}, ['sources', Suc, string, ['destinations', Suc, string, null]]];
 export declare type DeleteDestination = ['workspaces', Delete, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, null]]];
 export declare type CreateTrackingPlan = ['workspaces', Post, Suc, string, {
     tracking_plan: TrackingPlanCreation;
 }, {}, ['tracking-plans', None, null, null]];
 export declare type GetTrackingPlan = ['workspaces', Get, Suc, string, {}, {}, ['tracking-plans', Suc, string, null]];
-export declare type ListTrackingPlans = ['workspaces', Get, Suc, string, {}, {}, ['tracking-plans', None, null, null]];
-export declare type UpdateTrackingPlan = ['workspaces', Put, Suc, string, TrackingPlan, {}, ['tracking-plans', Suc, string, null]];
-export declare type ListTrackingPlanSourceConnections = ['workspaces', Get, Suc, string, {}, {}, ['tracking-plans', Suc, string, ['source-connections', None, null, null]]];
+export declare type ListTrackingPlans = ['workspaces', Get, Suc, string, {}, Page, ['tracking-plans', None, null, null]];
+export declare type UpdateTrackingPlan = ['workspaces', Put, Suc, string, UpdateTrackingPlanConfig, {}, ['tracking-plans', Suc, string, null]];
+export declare type DeleteTrackingPlan = ['workspaces', Delete, Suc, string, {}, {}, ['tracking-plans', Suc, string, null]];
+export declare type ListTrackingPlanSourceConnections = ['workspaces', Get, Suc, string, {}, Page, ['tracking-plans', Suc, string, ['source-connections', None, null, null]]];
 export declare type BatchTrackingPlanSourceConnection = ['workspaces', Post, Suc, string, {
     'source_names': string[];
 }, {}, ['tracking-plans', Suc, string, ['source-connections:batchCreateConnections', None, null, null]]];
@@ -158,7 +194,7 @@ export declare type CreateTrackingPlanSourceConnection = ['workspaces', Post, Su
     'source_name': string;
 }, {}, ['tracking-plans', Suc, string, ['source-connections', None, null, null]]];
 export declare type DeleteTrackingPlanSourceConnection = ['workspaces', Delete, Suc, string, {}, {}, ['tracking-plans', Suc, string, ['source-connections', Suc, string, null]]];
-export declare type ListFilters = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', None, null, null]]]];
+export declare type ListFilters = ['workspaces', Get, Suc, string, {}, Page, ['sources', Suc, string, ['destinations', Suc, string, ['filters', None, null, null]]]];
 export declare type GetFilter = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]];
 export declare type CreateFilter = ['workspaces', Post, Suc, string, {
     filter: Filter;
@@ -170,6 +206,12 @@ export declare type DeleteFilter = ['workspaces', Post, Suc, string, {}, {}, ['s
 export declare type TrackingPlanSourceConnectionResult = {
     source_name: string;
     tracking_plan_id: string;
+};
+export declare type UpdateTrackingPlanConfig = {
+    update_mask: {
+        paths: ('tracking_plan.display_name' | 'tracking_plan.rules' | 'tracking_plan.rules.events' | 'tracking_plan.rules.global' | 'tracking_plan.rules.identify' | 'tracking_plan.rules.group')[];
+    };
+    tracking_plan: Partial<TrackingPlanCreation>;
 };
 export declare type Filter = {
     title: string;

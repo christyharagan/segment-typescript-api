@@ -32,6 +32,26 @@ export async function request(token, input) {
         },
         body: body_str
     });
-    return await response.json();
+    let t = await response.text();
+    try {
+        let j = JSON.parse(t);
+        // As described below, an error response is invalid JSON. However, assuming this is fixed, this condition here will be ready to pick it up!
+        if (j.error) {
+            console.error('Error making Segment Request');
+            console.error(input);
+            throw j;
+        }
+        else {
+            return j;
+        }
+    }
+    catch (e) {
+        // Currently Segment's Config API returns an invalid JSON response for Error messages
+        console.error('Error making Segment Request');
+        console.error(input);
+        throw t;
+    }
+    // response.text()
+    // return await response.json() as Schema<I>
 }
 //# sourceMappingURL=config_request.js.map

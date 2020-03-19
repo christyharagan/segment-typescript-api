@@ -5,39 +5,40 @@ export type R<I extends Input> = Promise<Schema<I>>
 
 export type Method = Post | Get | Delete | Patch | Put
 export type Get = 'get'
-export type Delete = 'del'
+export type Delete = 'delete'
 export type Patch = 'patch'
 export type Post = 'post'
 export type Put = 'put'
 
-export type Schema<I extends Input> = I extends ListCatalogSources ? { sources: SourceCatalogModel[] } :
+export type Schema<I extends Input> = I extends ListCatalogSources ? { sources: SourceCatalogModel[], next_page_token?: string } :
   I extends GetCatalogSource ? SourceCatalogModel :
-  I extends ListCatalogDestinations ? { destinations: DestinationCatalogModel[] } :
+  I extends ListCatalogDestinations ? { destinations: DestinationCatalogModel[], next_page_token?: string } :
   I extends GetCatalogDestination ? DestinationConfig :
   I extends GetWorkspace ? Workspace :
   I extends CreateSource ? Source :
   I extends GetSource ? Source :
-  I extends ListSources ? { sources: Source[] } :
+  I extends ListSources ? { sources: Source[], next_page_token?: string } :
   I extends GetSchemaConfiguration ? { [key: string]: JSON } :
   I extends UpdateSchemaConfiguration ? { [key: string]: JSON } :
   I extends DeleteSource ? {} :
   I extends CreateDestination ? DestinationConfig :
   I extends GetDestination ? DestinationConfig :
-  I extends ListDestinations ? { destinations: DestinationConfig[] } :
+  I extends ListDestinations ? { destinations: DestinationConfig['destination'][], next_page_token?: string } :
   I extends UpdateDestination ? DestinationConfig :
   I extends CreateTrackingPlan ? TrackingPlan :
   I extends GetTrackingPlan ? TrackingPlan :
-  I extends ListTrackingPlans ? { tracking_plans: TrackingPlan[] } :
+  I extends ListTrackingPlans ? { tracking_plans: TrackingPlan[], next_page_token?: string } :
   I extends UpdateTrackingPlan ? TrackingPlan :
-  I extends ListFilters ? { filters: Filter[] } :
-  I extends GetFilter ? Filter :
+  I extends ListFilters ? { filters: (Filter & { name: string })[], next_page_token?: string } :
+  I extends GetFilter ? (Filter & { name: string }) :
   I extends CreateFilter ? Filter & { name: string } :
-  I extends UpdateFilter ? { filter: Filter } :
+  I extends UpdateFilter ? { filter: Filter & { name: string } } :
   I extends DeleteFilter ? {} :
   I extends BatchTrackingPlanSourceConnection ? { connections: TrackingPlanSourceConnectionResult[] } :
   I extends CreateTrackingPlanSourceConnection ? { connection: TrackingPlanSourceConnectionResult } :
-  I extends ListTrackingPlanSourceConnections ? { connections: TrackingPlanSourceConnectionResult[] } :
+  I extends ListTrackingPlanSourceConnections ? { connections: TrackingPlanSourceConnectionResult[], next_page_token?: string } :
   I extends DeleteTrackingPlanSourceConnection ? {} :
+  I extends DeleteTrackingPlan ? {} :
   never
 
 export type SourceCatalogModel = {
@@ -91,7 +92,7 @@ export type ConnectionMode = 'UNSPECIFIED' | 'CLOUD' | 'DEVICE'
 
 export type Page = { page_size?: number, page_token?: string };
 
-export type ConfigValue = { name: string } & ({ type: 'string', value: string } | { type: 'boolean', value: boolean } | { type: 'map', value: { [k: string]: string } } | { type: 'number', value: number } | { type: 'list', value: string[] })
+export type ConfigValue = { name: string } & ({ type: 'string' | 'password' | 'color', value: string } | { type: 'boolean', value: boolean } | { type: 'map', value: { [k: string]: string } } | { type: 'number', value: number } | { type: 'list', value: string[] } | {type: 'mixed', value: any})
 
 export type DestinationConfig = { destination: { name: string, config: ConfigValue[], enabled: boolean, connection_mode: ConnectionMode } }
 
@@ -146,6 +147,7 @@ export type Input = ListCatalogSources |
   CreateTrackingPlan |
   GetTrackingPlan |
   UpdateTrackingPlan |
+  DeleteTrackingPlan |
   ListTrackingPlans |
   ListFilters |
   GetFilter |
@@ -162,38 +164,39 @@ export type NestedInput = null | [string, IDLoc, string | null, NestedInput]
 export type Prefix = 'catalog' | 'workspaces'
 export type Suffix = 'sources' | 'destinations' | 'tracking-plans' | 'schema-config'
 
-export type ListCatalogSources = ['catalog/sources', Get, None, null, Page, {}, null]
+export type ListCatalogSources = ['catalog/sources', Get, None, null, {}, Page, null]
 export type GetCatalogSource = ['catalog/sources', Get, Suc, string, {}, {}, null]
 
-export type ListCatalogDestinations = ['catalog/destinations', Get, None, null, Page, {}, null]
+export type ListCatalogDestinations = ['catalog/destinations', Get, None, null, {}, Page, null]
 export type GetCatalogDestination = ['catalog/destinations', Get, Suc, string, {}, {}, null]
 
 export type GetWorkspace = ['workspaces', Get, Suc, string, {}, {}, null]
 
 export type CreateSource = ['workspaces', Post, Suc, string, { source: CreateSourceConfig }, {}, ['sources', None, null, null]]
 export type GetSource = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, null]]
-export type ListSources = ['workspaces', Get, Suc, string, Page, {}, ['sources', None, null, null]]
+export type ListSources = ['workspaces', Get, Suc, string, {}, Page, ['sources', None, null, null]]
 export type GetSchemaConfiguration = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['schema-config', None, null, null]]]
 export type UpdateSchemaConfiguration = ['workspaces', Patch, Suc, string, UpdateSchemaConfig, {}, ['sources', Suc, string, ['schema-config', None, null, null]]]
 export type DeleteSource = ['workspaces', Delete, Suc, string, {}, {}, ['sources', Suc, string, null]]
 
 export type CreateDestination = ['workspaces', Post, Suc, string, DestinationConfig, {}, ['sources', Suc, string, ['destinations', None, null, null]]]
 export type GetDestination = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, null]]]
-export type ListDestinations = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', None, null, null]]]
+export type ListDestinations = ['workspaces', Get, Suc, string, {}, Page, ['sources', Suc, string, ['destinations', None, null, null]]]
 export type UpdateDestination = ['workspaces', Patch, Suc, string, DestinationConfig, {}, ['sources', Suc, string, ['destinations', Suc, string, null]]]
 export type DeleteDestination = ['workspaces', Delete, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, null]]]
 
 export type CreateTrackingPlan = ['workspaces', Post, Suc, string, { tracking_plan: TrackingPlanCreation }, {}, ['tracking-plans', None, null, null]]
 export type GetTrackingPlan = ['workspaces', Get, Suc, string, {}, {}, ['tracking-plans', Suc, string, null]]
-export type ListTrackingPlans = ['workspaces', Get, Suc, string, {}, {}, ['tracking-plans', None, null, null]]
-export type UpdateTrackingPlan = ['workspaces', Put, Suc, string, TrackingPlan, {}, ['tracking-plans', Suc, string, null]]
+export type ListTrackingPlans = ['workspaces', Get, Suc, string, {}, Page, ['tracking-plans', None, null, null]]
+export type UpdateTrackingPlan = ['workspaces', Put, Suc, string, UpdateTrackingPlanConfig, {}, ['tracking-plans', Suc, string, null]]
+export type DeleteTrackingPlan = ['workspaces', Delete, Suc, string, {}, {}, ['tracking-plans', Suc, string, null]]
 
-export type ListTrackingPlanSourceConnections = ['workspaces', Get, Suc, string, {}, {}, ['tracking-plans', Suc, string, ['source-connections', None, null, null]]]
+export type ListTrackingPlanSourceConnections = ['workspaces', Get, Suc, string, {}, Page, ['tracking-plans', Suc, string, ['source-connections', None, null, null]]]
 export type BatchTrackingPlanSourceConnection = ['workspaces', Post, Suc, string, { 'source_names': string[] }, {}, ['tracking-plans', Suc, string, ['source-connections:batchCreateConnections', None, null, null]]]
 export type CreateTrackingPlanSourceConnection = ['workspaces', Post, Suc, string, { 'source_name': string }, {}, ['tracking-plans', Suc, string, ['source-connections', None, null, null]]]
 export type DeleteTrackingPlanSourceConnection = ['workspaces', Delete, Suc, string, {}, {}, ['tracking-plans', Suc, string, ['source-connections', Suc, string, null]]]
 
-export type ListFilters = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', None, null, null]]]]
+export type ListFilters = ['workspaces', Get, Suc, string, {}, Page, ['sources', Suc, string, ['destinations', Suc, string, ['filters', None, null, null]]]]
 export type GetFilter = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]]
 export type CreateFilter = ['workspaces', Post, Suc, string, { filter: Filter }, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', None, null, null]]]]
 export type UpdateFilter = ['workspaces', Patch, Suc, string, { filter: Filter }, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]]
@@ -202,6 +205,13 @@ export type DeleteFilter = ['workspaces', Post, Suc, string, {}, {}, ['sources',
 export type TrackingPlanSourceConnectionResult = {
   source_name: string
   tracking_plan_id: string
+}
+
+export type UpdateTrackingPlanConfig = {
+  update_mask: {
+    paths: ('tracking_plan.display_name' | 'tracking_plan.rules' | 'tracking_plan.rules.events' | 'tracking_plan.rules.global' | 'tracking_plan.rules.identify' | 'tracking_plan.rules.group')[]
+  },
+  tracking_plan: Partial<TrackingPlanCreation>
 }
 
 export type Filter = {
@@ -260,5 +270,23 @@ export async function request<I extends Input>(token: string, input: I): Promise
     },
     body: body_str
   })
-  return await response.json() as Schema<I>
+  let t = await response.text()
+  try {
+    let j = JSON.parse(t)
+    // As described below, an error response is invalid JSON. However, assuming this is fixed, this condition here will be ready to pick it up!
+    if (j.error) {
+      console.error('Error making Segment Request')
+      console.error(input)
+      throw j
+    } else {
+      return j
+    }
+  } catch (e) {
+    // Currently Segment's Config API returns an invalid JSON response for Error messages
+    console.error('Error making Segment Request')
+    console.error(input)
+    throw t
+  }
+  // response.text()
+  // return await response.json() as Schema<I>
 }
