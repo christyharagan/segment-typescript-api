@@ -55,7 +55,7 @@ export async function listAllSources(token: string, work_id: string): r.R<r.List
   }
   while (true) {
     let result = await listSources(token, work_id, page)
-    sources.sources.concat(result.sources)
+    sources.sources = sources.sources.concat(result.sources)
     if (result.next_page_token) {
       page = {
         page_token: result.next_page_token
@@ -99,7 +99,7 @@ export async function listAllDestinations(token: string, work_id: string, src_id
   }
   while (true) {
     let result = await listDestinations(token, work_id, src_id, page)
-    destinations.destinations.concat(result.destinations)
+    destinations.destinations = destinations.destinations.concat(result.destinations)
     if (result.next_page_token) {
       page = {
         page_token: result.next_page_token
@@ -135,7 +135,7 @@ export async function listAllTrackingPlans(token: string, work_id: string): r.R<
   }
   while (true) {
     let result = await listTrackingPlans(token, work_id, page)
-    tracking_plans.tracking_plans.concat(result.tracking_plans)
+    tracking_plans.tracking_plans = tracking_plans.tracking_plans.concat(result.tracking_plans)
     if (result.next_page_token) {
       page = {
         page_token: result.next_page_token
@@ -160,7 +160,7 @@ export async function listAllFilters(token: string, work_id: string, src_id: str
   }
   while (true) {
     let result = await listFilters(token, work_id, src_id, dest_id, page)
-    filters.filters.concat(result.filters)
+    filters.filters = filters.filters.concat(result.filters)
     if (result.next_page_token) {
       page = {
         page_token: result.next_page_token
@@ -204,7 +204,7 @@ export async function listAllTrackingPlanSourceConnectionss(token: string, work_
   }
   while (true) {
     let result = await listTrackingPlanSourceConnections(token, work_id, track_id, page)
-    connections.connections.concat(result.connections)
+    connections.connections = connections.connections.concat(result.connections)
     if (result.next_page_token) {
       page = {
         page_token: result.next_page_token

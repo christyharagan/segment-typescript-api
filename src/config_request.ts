@@ -276,6 +276,7 @@ export async function request<I extends Input>(token: string, input: I): Promise
     // As described below, an error response is invalid JSON. However, assuming this is fixed, this condition here will be ready to pick it up!
     if (j.error) {
       console.error('Error making Segment Request')
+      console.error(j)
       console.error(input)
       throw j
     } else {
@@ -284,6 +285,7 @@ export async function request<I extends Input>(token: string, input: I): Promise
   } catch (e) {
     // Currently Segment's Config API returns an invalid JSON response for Error messages
     console.error('Error making Segment Request')
+    console.error(e)
     console.error(input)
     throw t
   }
