@@ -15,8 +15,8 @@ export type Schema<I extends Input> = I extends ListCatalogSources ? { sources: 
   I extends ListCatalogDestinations ? { destinations: DestinationCatalogModel[], next_page_token?: string } :
   I extends GetCatalogDestination ? DestinationConfig :
   I extends GetWorkspace ? Workspace :
-  I extends CreateSource ? Source :
-  I extends GetSource ? Source :
+  I extends CreateSource ? Source & { display_name: string } :
+  I extends GetSource ? Source & { display_name: string } :
   I extends ListSources ? { sources: Source[], next_page_token?: string } :
   I extends GetSchemaConfiguration ? { [key: string]: JSON } :
   I extends UpdateSchemaConfiguration ? { [key: string]: JSON } :
@@ -92,7 +92,7 @@ export type ConnectionMode = 'UNSPECIFIED' | 'CLOUD' | 'DEVICE'
 
 export type Page = { page_size?: number, page_token?: string };
 
-export type ConfigValue = { name: string } & ({ type: 'string' | 'password' | 'color', value: string } | { type: 'boolean', value: boolean } | { type: 'map', value: { [k: string]: string } } | { type: 'number', value: number } | { type: 'list', value: string[] } | {type: 'mixed', value: any})
+export type ConfigValue = { name: string } & ({ type: 'string' | 'password' | 'color', value: string } | { type: 'boolean', value: boolean } | { type: 'map', value: { [k: string]: string } } | { type: 'number', value: number } | { type: 'list', value: string[] } | { type: 'mixed', value: any })
 
 export type DestinationConfig = { destination: { name: string, config: ConfigValue[], enabled: boolean, connection_mode: ConnectionMode } }
 

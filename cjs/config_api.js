@@ -27,6 +27,26 @@ function listCatalogSources(token, page) {
     return r.request(token, ['catalog/sources', 'get', 'none', null, {}, page || {}, null]);
 }
 exports.listCatalogSources = listCatalogSources;
+async function listAllCatalogSources(token) {
+    let page = {};
+    let sources = {
+        sources: []
+    };
+    while (true) {
+        let result = await listCatalogSources(token, page);
+        sources.sources = sources.sources.concat(result.sources);
+        if (result.next_page_token) {
+            page = {
+                page_token: result.next_page_token
+            };
+        }
+        else {
+            break;
+        }
+    }
+    return sources;
+}
+exports.listAllCatalogSources = listAllCatalogSources;
 function getCatalogSource(token, id) {
     return r.request(token, ['catalog/sources', 'get', 'suc', get_name(id), {}, {}, null]);
 }
@@ -35,6 +55,26 @@ function listCatalogDestinations(token, page) {
     return r.request(token, ['catalog/destinations', 'get', 'none', null, {}, page || {}, null]);
 }
 exports.listCatalogDestinations = listCatalogDestinations;
+async function listAllCatalogDestinations(token) {
+    let page = {};
+    let destinations = {
+        destinations: []
+    };
+    while (true) {
+        let result = await listCatalogDestinations(token, page);
+        destinations.destinations = destinations.destinations.concat(result.destinations);
+        if (result.next_page_token) {
+            page = {
+                page_token: result.next_page_token
+            };
+        }
+        else {
+            break;
+        }
+    }
+    return destinations;
+}
+exports.listAllCatalogDestinations = listAllCatalogDestinations;
 function getCatalogDestination(token, id) {
     return r.request(token, ['catalog/destinations', 'get', 'suc', get_name(id), {}, {}, null]);
 }

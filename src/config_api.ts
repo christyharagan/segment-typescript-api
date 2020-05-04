@@ -21,11 +21,48 @@ function get_catalog_name(catalog_name: string): string {
 export function listCatalogSources(token: string, page?: r.Page): r.R<r.ListCatalogSources> {
   return r.request(token, ['catalog/sources', 'get', 'none', null, {}, page || {}, null])
 }
+export async function listAllCatalogSources(token: string): r.R<r.ListCatalogSources> {
+  let page: r.Page | {} = {}
+  let sources: r.Schema<r.ListCatalogSources> = {
+    sources: []
+  }
+  while (true) {
+    let result = await listCatalogSources(token, page)
+    sources.sources = sources.sources.concat(result.sources)
+    if (result.next_page_token) {
+      page = {
+        page_token: result.next_page_token
+      }
+    } else {
+      break
+    }
+  }
+  return sources
+}
+
 export function getCatalogSource(token: string, id: string): r.R<r.GetCatalogSource> {
   return r.request(token, ['catalog/sources', 'get', 'suc', get_name(id), {}, {}, null])
 }
 export function listCatalogDestinations(token: string, page?: r.Page): r.R<r.ListCatalogDestinations> {
   return r.request(token, ['catalog/destinations', 'get', 'none', null, {}, page || {}, null])
+}
+export async function listAllCatalogDestinations(token: string): r.R<r.ListCatalogDestinations> {
+  let page: r.Page | {} = {}
+  let destinations: r.Schema<r.ListCatalogDestinations> = {
+    destinations: []
+  }
+  while (true) {
+    let result = await listCatalogDestinations(token, page)
+    destinations.destinations = destinations.destinations.concat(result.destinations)
+    if (result.next_page_token) {
+      page = {
+        page_token: result.next_page_token
+      }
+    } else {
+      break
+    }
+  }
+  return destinations
 }
 export function getCatalogDestination(token: string, id: string): r.R<r.GetCatalogDestination> {
   return r.request(token, ['catalog/destinations', 'get', 'suc', get_name(id), {}, {}, null])

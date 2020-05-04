@@ -1,7 +1,9 @@
 import * as r from './config_request';
 export declare function listCatalogSources(token: string, page?: r.Page): r.R<r.ListCatalogSources>;
+export declare function listAllCatalogSources(token: string): r.R<r.ListCatalogSources>;
 export declare function getCatalogSource(token: string, id: string): r.R<r.GetCatalogSource>;
 export declare function listCatalogDestinations(token: string, page?: r.Page): r.R<r.ListCatalogDestinations>;
+export declare function listAllCatalogDestinations(token: string): r.R<r.ListCatalogDestinations>;
 export declare function getCatalogDestination(token: string, id: string): r.R<r.GetCatalogDestination>;
 export declare function getWorkspace(token: string, work_id: string): r.R<r.GetWorkspace>;
 export declare function createSource(token: string, work_id: string, source: r.CreateSourceConfig): r.R<r.CreateSource>;

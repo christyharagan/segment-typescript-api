@@ -12,7 +12,11 @@ export declare type Schema<I extends Input> = I extends ListCatalogSources ? {
 } : I extends GetCatalogSource ? SourceCatalogModel : I extends ListCatalogDestinations ? {
     destinations: DestinationCatalogModel[];
     next_page_token?: string;
-} : I extends GetCatalogDestination ? DestinationConfig : I extends GetWorkspace ? Workspace : I extends CreateSource ? Source : I extends GetSource ? Source : I extends ListSources ? {
+} : I extends GetCatalogDestination ? DestinationConfig : I extends GetWorkspace ? Workspace : I extends CreateSource ? Source & {
+    display_name: string;
+} : I extends GetSource ? Source & {
+    display_name: string;
+} : I extends ListSources ? {
     sources: Source[];
     next_page_token?: string;
 } : I extends GetSchemaConfiguration ? {

@@ -1,6 +1,6 @@
 {
   "name": "segment-typescript-api",
-  "version": "0.6.1",
+  "version": "0.6.3",
   "description": "TypeScript API for consuming Segment.com profile, config, and HTTP tracking APIs",
   "repository": "christyharagan/segment-typescript-api",
   "author": {
