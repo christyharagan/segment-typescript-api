@@ -15,9 +15,9 @@ export type Schema<I extends Input> = I extends ListCatalogSources ? { sources: 
   I extends ListCatalogDestinations ? { destinations: DestinationCatalogModel[], next_page_token?: string } :
   I extends GetCatalogDestination ? DestinationConfig :
   I extends GetWorkspace ? Workspace :
-  I extends CreateSource ? Source & { display_name: string } :
+  I extends CreateSource ? Source :
   I extends GetSource ? Source & { display_name: string } :
-  I extends ListSources ? { sources: Source[], next_page_token?: string } :
+  I extends ListSources ? { sources: (Source & { display_name: string })[], next_page_token?: string } :
   I extends GetSchemaConfiguration ? { [key: string]: JSON } :
   I extends UpdateSchemaConfiguration ? { [key: string]: JSON } :
   I extends DeleteSource ? {} :
