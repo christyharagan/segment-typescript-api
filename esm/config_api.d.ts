@@ -29,7 +29,7 @@ export declare function listFilters(token: string, work_id: string, src_id: stri
 export declare function listAllFilters(token: string, work_id: string, src_id: string, dest_id: string): r.R<r.ListFilters>;
 export declare function getFilter(token: string, work_id: string, src_id: string, dest_id: string, filter_id: string): r.R<r.GetFilter>;
 export declare function createFilter(token: string, work_id: string, src_id: string, dest_id: string, config: r.Filter): r.R<r.CreateFilter>;
-export declare function updateFilter(token: string, work_id: string, src_id: string, dest_id: string, filter_id: string, config: r.Filter): r.R<r.UpdateFilter>;
+export declare function updateFilter(token: string, work_id: string, src_id: string, dest_id: string, filter_id: string, config: r.FilterUpdate): r.R<r.UpdateFilter>;
 export declare function deleteFilter(token: string, work_id: string, src_id: string, dest_id: string, filter_id: string): r.R<r.DeleteFilter>;
 export declare function batchTrackingPlanSourceConnection(token: string, work_id: string, track_id: string, src_ids: string[]): r.R<r.BatchTrackingPlanSourceConnection>;
 export declare function createTrackingPlanSourceConnection(token: string, work_id: string, track_id: string, src_id: string): r.R<r.CreateTrackingPlanSourceConnection>;

@@ -203,9 +203,7 @@ export declare type GetFilter = ['workspaces', Get, Suc, string, {}, {}, ['sourc
 export declare type CreateFilter = ['workspaces', Post, Suc, string, {
     filter: Filter;
 }, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', None, null, null]]]];
-export declare type UpdateFilter = ['workspaces', Patch, Suc, string, {
-    filter: Filter;
-}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]];
+export declare type UpdateFilter = ['workspaces', Patch, Suc, string, FilterUpdate, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]];
 export declare type DeleteFilter = ['workspaces', Post, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]];
 export declare type TrackingPlanSourceConnectionResult = {
     source_name: string;
@@ -242,5 +240,9 @@ export declare type Filter = {
         };
     })[];
     enabled: boolean;
+};
+export declare type FilterUpdate = {
+    filter: Filter;
+    update_mask: ('if' | 'title' | 'actions')[];
 };
 export declare function request<I extends Input>(token: string, input: I): Promise<Schema<I>>;

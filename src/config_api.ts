@@ -217,8 +217,8 @@ export function createFilter(token: string, work_id: string, src_id: string, des
   return r.request(token, ['workspaces', 'post', 'suc', work_id, { filter: config }, {}, ['sources', 'suc', get_name(src_id), ['destinations', 'suc', get_name(dest_id), ['filters', 'none', null, null]]]])
 }
 
-export function updateFilter(token: string, work_id: string, src_id: string, dest_id: string, filter_id: string, config: r.Filter): r.R<r.UpdateFilter> {
-  return r.request(token, ['workspaces', 'patch', 'suc', work_id, { filter: config }, {}, ['sources', 'suc', get_name(src_id), ['destinations', 'suc', get_name(dest_id), ['filters', 'suc', get_name(filter_id), null]]]])
+export function updateFilter(token: string, work_id: string, src_id: string, dest_id: string, filter_id: string, config: r.FilterUpdate): r.R<r.UpdateFilter> {
+  return r.request(token, ['workspaces', 'patch', 'suc', work_id, config, {}, ['sources', 'suc', get_name(src_id), ['destinations', 'suc', get_name(dest_id), ['filters', 'suc', get_name(filter_id), null]]]])
 }
 
 export function deleteFilter(token: string, work_id: string, src_id: string, dest_id: string, filter_id: string): r.R<r.DeleteFilter> {

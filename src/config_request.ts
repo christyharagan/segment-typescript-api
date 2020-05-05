@@ -199,7 +199,7 @@ export type DeleteTrackingPlanSourceConnection = ['workspaces', Delete, Suc, str
 export type ListFilters = ['workspaces', Get, Suc, string, {}, Page, ['sources', Suc, string, ['destinations', Suc, string, ['filters', None, null, null]]]]
 export type GetFilter = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]]
 export type CreateFilter = ['workspaces', Post, Suc, string, { filter: Filter }, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', None, null, null]]]]
-export type UpdateFilter = ['workspaces', Patch, Suc, string, { filter: Filter }, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]]
+export type UpdateFilter = ['workspaces', Patch, Suc, string, FilterUpdate, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]]
 export type DeleteFilter = ['workspaces', Post, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]]
 
 export type TrackingPlanSourceConnectionResult = {
@@ -231,6 +231,11 @@ export type Filter = {
     fields: { [k: string]: { field: string[] } }
   })[]
   enabled: boolean
+}
+
+export type FilterUpdate = {
+  filter: Filter
+  update_mask: ('if' | 'title' | 'actions')[]
 }
 // ['workspaces', 'regulations']
 // ['workspaces', 'invites']

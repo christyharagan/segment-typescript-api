@@ -253,7 +253,7 @@ function createFilter(token, work_id, src_id, dest_id, config) {
 }
 exports.createFilter = createFilter;
 function updateFilter(token, work_id, src_id, dest_id, filter_id, config) {
-    return r.request(token, ['workspaces', 'patch', 'suc', work_id, { filter: config }, {}, ['sources', 'suc', get_name(src_id), ['destinations', 'suc', get_name(dest_id), ['filters', 'suc', get_name(filter_id), null]]]]);
+    return r.request(token, ['workspaces', 'patch', 'suc', work_id, config, {}, ['sources', 'suc', get_name(src_id), ['destinations', 'suc', get_name(dest_id), ['filters', 'suc', get_name(filter_id), null]]]]);
 }
 exports.updateFilter = updateFilter;
 function deleteFilter(token, work_id, src_id, dest_id, filter_id) {
