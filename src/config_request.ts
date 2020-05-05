@@ -235,7 +235,7 @@ export type Filter = {
 
 export type FilterUpdate = {
   filter: Filter
-  update_mask: ('if' | 'title' | 'actions')[]
+  update_mask: { paths: ('if' | 'title' | 'actions')[] }
 }
 // ['workspaces', 'regulations']
 // ['workspaces', 'invites']

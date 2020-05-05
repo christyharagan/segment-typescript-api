@@ -243,6 +243,8 @@ export declare type Filter = {
 };
 export declare type FilterUpdate = {
     filter: Filter;
-    update_mask: ('if' | 'title' | 'actions')[];
+    update_mask: {
+        paths: ('if' | 'title' | 'actions')[];
+    };
 };
 export declare function request<I extends Input>(token: string, input: I): Promise<Schema<I>>;
