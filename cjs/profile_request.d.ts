@@ -2,7 +2,7 @@ export declare type R<I extends Input, Verbose extends boolean> = Promise<Schema
 export declare type Id = string | {
     [key: string]: string;
 };
-export declare type Schema<I extends Input, Verbose extends boolean> = I extends ListUsers ? Users : I extends UsersExternalIds ? ExternalIds<Verbose> : I extends UsersMetadata ? Metadata : I extends UsersEvents ? Events : I extends UsersLinks ? Links<Verbose> : never;
+export declare type Schema<I extends Input, Verbose extends boolean> = I extends ListUsers ? Users : I extends UsersExternalIds ? ExternalIds<Verbose> : I extends UsersMetadata ? Metadata : I extends UsersEvents ? Events : I extends UsersLinks ? Links<Verbose> : I extends UsersTraits ? Traits<Verbose> : never;
 export declare type Input = ListUsers | UsersTraits | UsersExternalIds | UsersMetadata | UsersEvents | UsersLinks;
 export declare type IncludeLimitArgs = {
     include?: string[];

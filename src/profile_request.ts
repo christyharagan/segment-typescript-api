@@ -11,6 +11,7 @@ export type Schema<I extends Input, Verbose extends boolean> =
   I extends UsersMetadata ? Metadata :
   I extends UsersEvents ? Events :
   I extends UsersLinks ? Links<Verbose> :
+  I extends UsersTraits ? Traits<Verbose> :
   never
 
 export type Input = ListUsers | UsersTraits | UsersExternalIds | UsersMetadata | UsersEvents | UsersLinks
