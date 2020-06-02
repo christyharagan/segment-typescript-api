@@ -39,7 +39,42 @@ export type Schema<I extends Input> = I extends ListCatalogSources ? { sources: 
   I extends ListTrackingPlanSourceConnections ? { connections: TrackingPlanSourceConnectionResult[], next_page_token?: string } :
   I extends DeleteTrackingPlanSourceConnection ? {} :
   I extends DeleteTrackingPlan ? {} :
+  I extends CreateFunction ? FunctionResponse :
+  I extends GetFunction ? FunctionResponse :
+  I extends UpdateFunction ? FunctionResponse :
+  I extends DeleteFunction ? {} :
+  I extends ListFunctions ? {
+    functions: FunctionResponse[]
+    next_page_token?: string
+  } :
+  I extends PreviewFunction ? InvokeFunctionResponse :
+  I extends DeployFunction ? {} :
+  I extends IsLatestFunction ? { is_latest: boolean } :
   never
+
+export type InvokeFunctionResponse = {
+  invoke: {
+    success: boolean
+    output: string
+    error_reason: string | null
+  }
+  logs: {
+    message: string
+    created_at: string
+  }[]
+  logs_truncated: boolean
+  session_id: string
+}
+
+export type FunctionResponse = {
+  code: string,
+  buildpack: string,
+  id: string,
+  workspace_id: string,
+  display_name: string,
+  created_at: string,
+  created_by: string
+}
 
 export type SourceCatalogModel = {
   categories: string[],
@@ -157,7 +192,15 @@ export type Input = ListCatalogSources |
   BatchTrackingPlanSourceConnection |
   CreateTrackingPlanSourceConnection |
   ListTrackingPlanSourceConnections |
-  DeleteTrackingPlanSourceConnection
+  DeleteTrackingPlanSourceConnection |
+  CreateFunction |
+  GetFunction |
+  UpdateFunction |
+  DeleteFunction |
+  ListFunctions |
+  PreviewFunction |
+  DeployFunction |
+  IsLatestFunction
 
 export type NestedInput = null | [string, IDLoc, string | null, NestedInput]
 
@@ -201,6 +244,52 @@ export type GetFilter = ['workspaces', Get, Suc, string, {}, {}, ['sources', Suc
 export type CreateFilter = ['workspaces', Post, Suc, string, { filter: Filter }, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', None, null, null]]]]
 export type UpdateFilter = ['workspaces', Patch, Suc, string, FilterUpdate, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]]
 export type DeleteFilter = ['workspaces', Post, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]]
+
+export type CreateFunction = ['workspaces', Post, Suc, string, CreateFunctionBody, CreateFunctionArgs, ['functions', None, null, null]]
+export type GetFunction = ['workspaces', Get, Suc, string, {}, {}, ['functions', Suc, string, null]]
+export type UpdateFunction = ['workspaces', Patch, Suc, string, UpdateFunctionBody, {}, ['functions', Suc, string, null]]
+export type DeleteFunction = ['workspaces', Delete, Suc, string, {}, {}, ['functions', Suc, string, null]]
+export type ListFunctions = ['workspaces', Get, Suc, string, {}, ListFunctionsArgs, ['functions', None, null, null]]
+export type PreviewFunction = ['workspaces', Post, Suc, string, PreviewFunctionBody, CreateFunctionArgs, ['functions', None, null, ['preview', None, null, null]]]
+export type DeployFunction = ['workspaces', Post, Suc, string, {}, {}, ['functions', Suc, string, ['deploy', None, null, null]]]
+export type IsLatestFunction = ['workspaces', Get, Suc, string, {}, {}, ['functions', Suc, string, ['is-latest-version', None, null, null]]]
+
+export type CreateFunctionArgs = {
+  type: 'SOURCE' | 'DESTINATION'
+}
+
+export type FunctionBody = {
+  code: string
+  buildpack: 'boreal'
+  settings?: {
+    name: string
+    label: string
+    type: 'string' | 'boolean' | 'text-map' | 'array'
+    description?: string
+    required?: boolean
+    sensitive?: boolean
+  }[]
+}
+
+export type CreateFunctionBody = {
+  function: FunctionBody & {
+    display_name: string
+  }
+}
+export type UpdateFunctionBody = {
+  function: FunctionBody
+  update_mask: { paths: ('function.code' | 'function.buildpack' | 'function.settings')[] }
+}
+export type ListFunctionsArgs = {
+  type: 'SOURCE' | 'DESTINATION'
+  page_size?: number
+  page_token?: string
+}
+export type PreviewFunctionBody = {
+  function: FunctionBody
+  payload: string
+  session_id?: string
+}
 
 export type TrackingPlanSourceConnectionResult = {
   source_name: string

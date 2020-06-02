@@ -49,7 +49,34 @@ export declare type Schema<I extends Input> = I extends ListCatalogSources ? {
 } : I extends ListTrackingPlanSourceConnections ? {
     connections: TrackingPlanSourceConnectionResult[];
     next_page_token?: string;
-} : I extends DeleteTrackingPlanSourceConnection ? {} : I extends DeleteTrackingPlan ? {} : never;
+} : I extends DeleteTrackingPlanSourceConnection ? {} : I extends DeleteTrackingPlan ? {} : I extends CreateFunction ? FunctionResponse : I extends GetFunction ? FunctionResponse : I extends UpdateFunction ? FunctionResponse : I extends DeleteFunction ? {} : I extends ListFunctions ? {
+    functions: FunctionResponse[];
+    next_page_token?: string;
+} : I extends PreviewFunction ? InvokeFunctionResponse : I extends DeployFunction ? {} : I extends IsLatestFunction ? {
+    is_latest: boolean;
+} : never;
+export declare type InvokeFunctionResponse = {
+    invoke: {
+        success: boolean;
+        output: string;
+        error_reason: string | null;
+    };
+    logs: {
+        message: string;
+        created_at: string;
+    }[];
+    logs_truncated: boolean;
+    session_id: string;
+};
+export declare type FunctionResponse = {
+    code: string;
+    buildpack: string;
+    id: string;
+    workspace_id: string;
+    display_name: string;
+    created_at: string;
+    created_by: string;
+};
 export declare type SourceCatalogModel = {
     categories: string[];
     description: string;
@@ -161,7 +188,7 @@ export declare type UpdateSchemaConfig = {
     schema_config: {};
     update_mask: {};
 };
-export declare type Input = ListCatalogSources | GetCatalogSource | ListCatalogDestinations | GetCatalogDestination | GetWorkspace | CreateSource | GetSource | ListSources | GetSchemaConfiguration | UpdateSchemaConfiguration | DeleteSource | CreateDestination | GetDestination | ListDestinations | UpdateDestination | DeleteDestination | CreateTrackingPlan | GetTrackingPlan | UpdateTrackingPlan | DeleteTrackingPlan | ListTrackingPlans | ListFilters | GetFilter | CreateFilter | UpdateFilter | DeleteFilter | BatchTrackingPlanSourceConnection | CreateTrackingPlanSourceConnection | ListTrackingPlanSourceConnections | DeleteTrackingPlanSourceConnection;
+export declare type Input = ListCatalogSources | GetCatalogSource | ListCatalogDestinations | GetCatalogDestination | GetWorkspace | CreateSource | GetSource | ListSources | GetSchemaConfiguration | UpdateSchemaConfiguration | DeleteSource | CreateDestination | GetDestination | ListDestinations | UpdateDestination | DeleteDestination | CreateTrackingPlan | GetTrackingPlan | UpdateTrackingPlan | DeleteTrackingPlan | ListTrackingPlans | ListFilters | GetFilter | CreateFilter | UpdateFilter | DeleteFilter | BatchTrackingPlanSourceConnection | CreateTrackingPlanSourceConnection | ListTrackingPlanSourceConnections | DeleteTrackingPlanSourceConnection | CreateFunction | GetFunction | UpdateFunction | DeleteFunction | ListFunctions | PreviewFunction | DeployFunction | IsLatestFunction;
 export declare type NestedInput = null | [string, IDLoc, string | null, NestedInput];
 export declare type Prefix = 'catalog' | 'workspaces';
 export declare type Suffix = 'sources' | 'destinations' | 'tracking-plans' | 'schema-config';
@@ -205,6 +232,50 @@ export declare type CreateFilter = ['workspaces', Post, Suc, string, {
 }, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', None, null, null]]]];
 export declare type UpdateFilter = ['workspaces', Patch, Suc, string, FilterUpdate, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]];
 export declare type DeleteFilter = ['workspaces', Post, Suc, string, {}, {}, ['sources', Suc, string, ['destinations', Suc, string, ['filters', Suc, string, null]]]];
+export declare type CreateFunction = ['workspaces', Post, Suc, string, CreateFunctionBody, CreateFunctionArgs, ['functions', None, null, null]];
+export declare type GetFunction = ['workspaces', Get, Suc, string, {}, {}, ['functions', Suc, string, null]];
+export declare type UpdateFunction = ['workspaces', Patch, Suc, string, UpdateFunctionBody, {}, ['functions', Suc, string, null]];
+export declare type DeleteFunction = ['workspaces', Delete, Suc, string, {}, {}, ['functions', Suc, string, null]];
+export declare type ListFunctions = ['workspaces', Get, Suc, string, {}, ListFunctionsArgs, ['functions', None, null, null]];
+export declare type PreviewFunction = ['workspaces', Post, Suc, string, PreviewFunctionBody, CreateFunctionArgs, ['functions', None, null, ['preview', None, null, null]]];
+export declare type DeployFunction = ['workspaces', Post, Suc, string, {}, {}, ['functions', Suc, string, ['deploy', None, null, null]]];
+export declare type IsLatestFunction = ['workspaces', Get, Suc, string, {}, {}, ['functions', Suc, string, ['is-latest-version', None, null, null]]];
+export declare type CreateFunctionArgs = {
+    type: 'SOURCE' | 'DESTINATION';
+};
+export declare type FunctionBody = {
+    code: string;
+    buildpack: 'boreal';
+    settings?: {
+        name: string;
+        label: string;
+        type: 'string' | 'boolean' | 'text-map' | 'array';
+        description?: string;
+        required?: boolean;
+        sensitive?: boolean;
+    }[];
+};
+export declare type CreateFunctionBody = {
+    function: FunctionBody & {
+        display_name: string;
+    };
+};
+export declare type UpdateFunctionBody = {
+    function: FunctionBody;
+    update_mask: {
+        paths: ('function.code' | 'function.buildpack' | 'function.settings')[];
+    };
+};
+export declare type ListFunctionsArgs = {
+    type: 'SOURCE' | 'DESTINATION';
+    page_size?: number;
+    page_token?: string;
+};
+export declare type PreviewFunctionBody = {
+    function: FunctionBody;
+    payload: string;
+    session_id?: string;
+};
 export declare type TrackingPlanSourceConnectionResult = {
     source_name: string;
     tracking_plan_id: string;
