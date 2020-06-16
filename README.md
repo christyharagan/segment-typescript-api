@@ -60,6 +60,72 @@ If you're using ESNext modules, import from the ```esm``` namespace:
 import * as config from 'segment-typescript-api/esm/config_api'
 ```
 
+Preview Function Usage (For commonjs)
+---
+
+```ts
+let api = require('./cjs/config_api')
+
+const ACCESS_TOKEN = '###' // This is a workspace access token (https://segment.com/docs/config-api/#sts=Access%20Tokens)
+const WORK_ID = '###' // Workspace ID (found under Workspace Settings/General Settings/ID)
+const SRC_FN_CODE = 'async function onRequest(r){let rr = await r.text(); console.log(rr)}' // This is the actual function code
+const SRC_PAYLOAD = { // This is the test-payload to test the source function with
+  body: {}, // The HTTP body
+  headers: {}, // HTTP headers
+  queryParameters: {} // HTTP URL query parameters
+}
+const DEST_FN_CODE = 'async function onTrack(event, settings) {console.log(event)}' // This is the actual function code
+const DEST_PAYLOAD = { // This is the test-payload to test the destination function with. Check out the examples in any of the APIs: https://segment.com/docs/connections/spec/
+  // This is a complete example. You would only need to populate the fields that your function would actually use (although some are required; see comments)
+  anonymousId: '23adfd82-aa0f-45a7-a756-24f2a7a4c895', // EITHER ONE OF userId OR anonymousId ARE REQUIRED (OR BOTH)
+  context: {
+    library: {
+      name: 'analytics.js',
+      version: '2.11.1'
+    },
+    page: {
+      path: '/academy/',
+      referrer: '',
+      search: '',
+      title: 'Analytics Academy',
+      url: 'https://segment.com/academy/'
+    },
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36',
+    ip: '108.0.78.21'
+  },
+  event: 'Course Clicked', // FOR TRACK-EVENTS, THIS IS A REQUIRED FIELD
+  integrations: {},
+  messageId: 'ajs-f8ca1e4de5024d9430b3928bd8ac6b96',
+  properties: { // FOR TRACK-EVENTS, THIS IS A REQUIRED FIELD
+    title: 'Intro to Analytics'
+  },
+  receivedAt: '2015-12-12T19:11:01.266Z',
+  sentAt: '2015-12-12T19:11:01.169Z',
+  timestamp: '2015-12-12T19:11:01.249Z',
+  type: 'track', // REQUIRED FIELD; THIS SPECIFIES THE KIND OF EVENT. SEE API DOCS FOR MORE DETAILS: https://segment.com/docs/connections/spec/
+  userId: 'AiUGstSDIg', // EITHER ONE OF userId OR anonymousId ARE REQUIRED (OR BOTH)
+  originalTimestamp: '2015-12-12T19:11:01.152Z'
+}
+
+api.previewSrcFunction(ACCESS_TOKEN, WORK_ID, {
+  function: {
+    buildpack: 'boreal',
+    code: SRC_FN_CODE
+  }
+}, { payload: SRC_PAYLOAD }).then(r => {
+  console.log(r)
+})
+
+api.previewDestFunction(ACCESS_TOKEN, WORK_ID, {
+  function: {
+    buildpack: 'boreal',
+    code: DEST_FN_CODE
+  }
+}, DEST_PAYLOAD).then(r => {
+  console.log(r)
+})
+```
+
 TODO
 ---
 

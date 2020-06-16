@@ -265,8 +265,11 @@ export function deleteFunction(token, work_id, function_id) {
 export function listFunctions(token, work_id, args) {
     return r.request(token, ['workspaces', 'get', 'suc', work_id, {}, args, ['functions', 'none', null, null]]);
 }
-export function previewFunction(token, work_id, type, body, payload) {
-    return r.request(token, ['workspaces', 'post', 'suc', work_id, Object.assign(Object.assign({}, body), { payload: JSON.stringify(payload) }), { type }, ['functions', 'none', null, ['preview', 'none', null, null]]]);
+export function previewSrcFunction(token, work_id, body, payload) {
+    return r.request(token, ['workspaces', 'post', 'suc', work_id, Object.assign(Object.assign({}, body), { payload: JSON.stringify(payload) }), { type: 'SOURCE' }, ['functions', 'none', null, ['preview', 'none', null, null]]]);
+}
+export function previewDestFunction(token, work_id, body, payload) {
+    return r.request(token, ['workspaces', 'post', 'suc', work_id, Object.assign(Object.assign({}, body), { payload: JSON.stringify(payload) }), { type: 'DESTINATION' }, ['functions', 'none', null, ['preview', 'none', null, null]]]);
 }
 export function deployFunction(token, work_id, function_id) {
     return r.request(token, ['workspaces', 'post', 'suc', work_id, {}, {}, ['functions', 'suc', function_id, ['deploy', 'none', null, null]]]);

@@ -41,10 +41,11 @@ export declare function getFunction(token: string, work_id: string, function_id:
 export declare function updateFunction(token: string, work_id: string, function_id: string, body: r.UpdateFunctionBody): r.R<r.UpdateFunction>;
 export declare function deleteFunction(token: string, work_id: string, function_id: string): r.R<r.DeleteFunction>;
 export declare function listFunctions(token: string, work_id: string, args: r.ListFunctionsArgs): r.R<r.ListFunctions>;
-export declare function previewFunction(token: string, work_id: string, type: r.CreateFunctionArgs['type'], body: Omit<r.PreviewFunctionBody, 'payload'>, payload: PreviewPayload): r.R<r.PreviewFunction>;
-export declare type PreviewPayload = {
+export declare function previewSrcFunction(token: string, work_id: string, body: Omit<r.PreviewFunctionBody, 'payload'>, payload: SrcPreviewPayload): r.R<r.PreviewFunction>;
+export declare function previewDestFunction(token: string, work_id: string, body: Omit<r.PreviewFunctionBody, 'payload'>, payload: DestPreviewPayload): r.R<r.PreviewFunction>;
+export declare type SrcPreviewPayload = {
     payload: {
-        body: object;
+        body: object | string;
         headers: {
             [key: string]: string[];
         };
@@ -55,5 +56,6 @@ export declare type PreviewPayload = {
         };
     };
 };
+export declare type DestPreviewPayload = SegmentProcessedEvent<SegmentTrackEvent | SegmentIdentifyEvent | SegmentScreenEvent | SegmentPageEvent | SegmentAliasEvent>;
 export declare function deployFunction(token: string, work_id: string, function_id: string): r.R<r.DeployFunction>;
 export declare function isLatestFunction(token: string, work_id: string, function_id: string): r.R<r.IsLatestFunction>;

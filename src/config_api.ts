@@ -271,16 +271,20 @@ export function deleteFunction(token: string, work_id: string, function_id: stri
 export function listFunctions(token: string, work_id: string, args: r.ListFunctionsArgs): r.R<r.ListFunctions> {
   return r.request(token, ['workspaces', 'get', 'suc', work_id, {}, args, ['functions', 'none', null, null]])
 }
-export function previewFunction(token: string, work_id: string, type: r.CreateFunctionArgs['type'], body: Omit<r.PreviewFunctionBody, 'payload'>, payload: PreviewPayload): r.R<r.PreviewFunction> {
-  return r.request(token, ['workspaces', 'post', 'suc', work_id, { ...body, payload: JSON.stringify(payload) }, { type }, ['functions', 'none', null, ['preview', 'none', null, null]]])
+export function previewSrcFunction(token: string, work_id: string, body: Omit<r.PreviewFunctionBody, 'payload'>, payload: SrcPreviewPayload): r.R<r.PreviewFunction> {
+  return r.request(token, ['workspaces', 'post', 'suc', work_id, { ...body, payload: JSON.stringify(payload) }, { type: 'SOURCE' }, ['functions', 'none', null, ['preview', 'none', null, null]]])
 }
-export type PreviewPayload = {
+export function previewDestFunction(token: string, work_id: string, body: Omit<r.PreviewFunctionBody, 'payload'>, payload: DestPreviewPayload): r.R<r.PreviewFunction> {
+  return r.request(token, ['workspaces', 'post', 'suc', work_id, { ...body, payload: JSON.stringify(payload) }, { type: 'DESTINATION' }, ['functions', 'none', null, ['preview', 'none', null, null]]])
+}
+export type SrcPreviewPayload = {
   payload: {
-    body: object,
+    body: object | string,
     headers: { [key: string]: string[] },
     queryParameters: { [key: string]: string | boolean | string[] | { [key: string]: string } }
   }
 }
+export type DestPreviewPayload = SegmentProcessedEvent<SegmentTrackEvent | SegmentIdentifyEvent | SegmentScreenEvent | SegmentPageEvent | SegmentAliasEvent>
 
 export function deployFunction(token: string, work_id: string, function_id: string): r.R<r.DeployFunction> {
   return r.request(token, ['workspaces', 'post', 'suc', work_id, {}, {}, ['functions', 'suc', function_id, ['deploy', 'none', null, null]]])
