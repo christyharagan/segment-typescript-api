@@ -1,7 +1,7 @@
-node_modules
+cjs/
+esm/
+node_modules/
 .tmp
 .DS_Store
 npm-debug.log
 yarn-error.log
-cjs
-esm
