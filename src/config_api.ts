@@ -284,7 +284,7 @@ export type SrcPreviewPayload = {
     queryParameters: { [key: string]: string | boolean | string[] | { [key: string]: string } }
   }
 }
-export type DestPreviewPayload = SegmentProcessedEvent<SegmentTrackEvent | SegmentIdentifyEvent | SegmentScreenEvent | SegmentPageEvent | SegmentAliasEvent>
+export type DestPreviewPayload = SegmentTrackEvent | SegmentIdentifyEvent | SegmentScreenEvent | SegmentPageEvent | SegmentAliasEvent | SegmentGroupEvent
 
 export function deployFunction(token: string, work_id: string, function_id: string): r.R<r.DeployFunction> {
   return r.request(token, ['workspaces', 'post', 'suc', work_id, {}, {}, ['functions', 'suc', function_id, ['deploy', 'none', null, null]]])

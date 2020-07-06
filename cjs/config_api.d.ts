@@ -56,6 +56,6 @@ export declare type SrcPreviewPayload = {
         };
     };
 };
-export declare type DestPreviewPayload = SegmentProcessedEvent<SegmentTrackEvent | SegmentIdentifyEvent | SegmentScreenEvent | SegmentPageEvent | SegmentAliasEvent>;
+export declare type DestPreviewPayload = SegmentTrackEvent | SegmentIdentifyEvent | SegmentScreenEvent | SegmentPageEvent | SegmentAliasEvent | SegmentGroupEvent;
 export declare function deployFunction(token: string, work_id: string, function_id: string): r.R<r.DeployFunction>;
 export declare function isLatestFunction(token: string, work_id: string, function_id: string): r.R<r.IsLatestFunction>;
