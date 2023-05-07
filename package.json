@@ -16,7 +16,7 @@
     "@types/json-schema": "^7.0.5",
     "base-64": "^0.1.0",
     "cross-fetch": "^3.0.5",
-    "json-schema": "^0.2.5",
+    "json-schema": "^0.4.0",
     "segment-typescript-definitions": "^0.2.5"
   }
 }
